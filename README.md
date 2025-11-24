@@ -33,13 +33,13 @@ This ensures correct handling of input/output and makes troubleshooting easier.
 
 ### Student Management System Interface
 
-![Student Management System Interface](Image%201.png)
+![Student Management System Interface]([Image%201.png](https://github.com/AdityaXChaudhary/Student-Management-System/blob/main/screenshots/Screenshot%202025-11-24%20193307.png))
 
 This screenshot illustrates the main interface for managing student records. Users can add, update, delete, and view student data.
 
 ### Debugging and Student Form Validation
 
-![Debugging and Validation](Image%202.png)
+![Debugging and Validation]([Image%202.png](https://github.com/AdityaXChaudhary/Student-Management-System/blob/main/screenshots/Screenshot%202025-11-24%20193319.png))
 
 Here, the system is being debugged using VS Code. The interface also shows an error dialog for invalid input, such as non-numeric ID or age.
 
