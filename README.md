@@ -39,7 +39,7 @@ This screenshot illustrates the main interface for managing student records. Use
 
 ### Debugging and Student Form Validation
 
-![Alt text]([https://example.com/your-image-url.jpg](https://github.com/AdityaXChaudhary/Student-Management-System/blob/main/screenshots/Screenshot%202025-11-24%20193501.png))
+![Alt text]([https://example.com/your-image-url.jpg](https://github.com/AdityaXChaudhary/Student-Management-System/blob/main/screenshots/Screenshot%202025-11-24%20193501.png)
 
 Here, the system is being debugged using VS Code. The interface also shows an error dialog for invalid input, such as non-numeric ID or age.
 
