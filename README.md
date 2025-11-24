@@ -33,7 +33,7 @@ This ensures correct handling of input/output and makes troubleshooting easier.
 
 ### Student Management System Interface
 
-![Student Management System Interface]([[Image%201.png](https://github.com/AdityaXChaudhary/Student-Management-System/blob/main/screenshots/Screenshot%202025-11-24%20193307.png](https://github.com/AdityaXChaudhary/Student-Management-System/blob/main/screenshots/Screenshot%202025-11-24%20193307.png)))
+![Alt text](https://github.com/AdityaXChaudhary/Student-Management-System/blob/main/screenshots/Screenshot%202025-11-24%20193307.png)
 
 This screenshot illustrates the main interface for managing student records. Users can add, update, delete, and view student data.
 
