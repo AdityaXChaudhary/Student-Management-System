@@ -1,152 +1,158 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-// Extend JFrame for Swing functionality
 public class StudentForm extends JFrame implements ActionListener {
 
     JTextField tName, tAge, tCourse, tId;
-    JTextArea output;
+    JTable studentTable;
+    DefaultTableModel tableModel;
     JButton bAdd, bUpdate, bDelete, bView;
-    JScrollPane scrollPane; // To make the output area scrollable
+    
+    // Modern Color Palette
+    Color primaryColor = new Color(52, 152, 219); // Bright Blue
+    Color successColor = new Color(46, 204, 113); // Emerald Green
+    Color dangerColor = new Color(231, 76, 60);   // Alizarin Red
+    Color bgColor = new Color(245, 247, 250);     // Soft Gray
 
     public StudentForm() {
         setTitle("Student Management System");
-        // Simple way to ensure the application closes
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(650, 500);
-        setLayout(new BorderLayout(15, 15)); // Use BorderLayout for main frame
+        setSize(800, 600);
+        getContentPane().setBackground(bgColor);
+        setLayout(new BorderLayout(20, 20));
 
-        // ----------------- INPUT & BUTTONS PANEL (Top Section) -----------------
-        JPanel topPanel = new JPanel(new BorderLayout());
+        // --- Header Section ---
+        JPanel header = new JPanel();
+        header.setBackground(primaryColor);
+        JLabel title = new JLabel("STUDENT REGISTRATION");
+        title.setForeground(Color.WHITE);
+        title.setFont(new Font("SansSerif", Font.BOLD, 22));
+        header.setBorder(new EmptyBorder(15, 0, 15, 0));
+        header.add(title);
+        add(header, BorderLayout.NORTH);
 
-        // 1. Input Panel: Uses GridLayout for neat input/label arrangement
-        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
-        inputPanel.setBorder(BorderFactory.createTitledBorder("Student Details"));
-        inputPanel.setBackground(new Color(240, 240, 240)); // Light gray background
+        // --- Main Content Container ---
+        JPanel mainContent = new JPanel(new BorderLayout(20, 20));
+        mainContent.setOpaque(false);
+        mainContent.setBorder(new EmptyBorder(0, 20, 20, 20));
 
-        inputPanel.add(new JLabel("ID (for Update/Delete):", SwingConstants.RIGHT));
-        tId = new JTextField(10);
-        inputPanel.add(tId);
-
-        inputPanel.add(new JLabel("Name:", SwingConstants.RIGHT));
-        tName = new JTextField(20);
-        inputPanel.add(tName);
-
-        inputPanel.add(new JLabel("Age:", SwingConstants.RIGHT));
-        tAge = new JTextField(5);
-        inputPanel.add(tAge);
-
-        inputPanel.add(new JLabel("Course:", SwingConstants.RIGHT));
-        tCourse = new JTextField(15);
-        inputPanel.add(tCourse);
+        // 1. Input Panel (Left Side)
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        leftPanel.setBackground(Color.WHITE);
+        leftPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(220, 220, 220)),
+            new EmptyBorder(20, 20, 20, 20)
+        ));
         
-        topPanel.add(inputPanel, BorderLayout.NORTH);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // 2. Buttons Panel: Uses FlowLayout to center the buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        // Labels and TextFields
+        addFormRow(leftPanel, "Student ID:", tId = new JTextField(15), gbc, 0);
+        addFormRow(leftPanel, "Full Name:", tName = new JTextField(15), gbc, 1);
+        addFormRow(leftPanel, "Age:", tAge = new JTextField(15), gbc, 2);
+        addFormRow(leftPanel, "Course:", tCourse = new JTextField(15), gbc, 3);
+
+        // 2. Buttons Panel (Bottom of Left Panel)
+        JPanel buttonGrid = new JPanel(new GridLayout(2, 2, 10, 10));
+        buttonGrid.setOpaque(false);
         
-        bAdd = new JButton("Add Student");
-        bUpdate = new JButton("Update Student");
-        bDelete = new JButton("Delete Student");
-        bView = new JButton("View All Students");
+        bAdd = createStyledButton("Add", successColor);
+        bUpdate = createStyledButton("Update", primaryColor);
+        bDelete = createStyledButton("Delete", dangerColor);
+        bView = createStyledButton("Refresh", new Color(108, 117, 125));
 
-        // Simple professional styling for buttons
-        bAdd.setBackground(new Color(46, 204, 113)); // Emerald Green
-        bAdd.setForeground(Color.WHITE);
-        bUpdate.setBackground(new Color(52, 152, 219)); // Peter River Blue
-        bUpdate.setForeground(Color.WHITE);
-        bDelete.setBackground(new Color(231, 76, 60)); // Alizarin Red
-        bDelete.setForeground(Color.WHITE);
-        bView.setBackground(new Color(149, 165, 166)); // Concrete Gray
-        bView.setForeground(Color.WHITE);
+        buttonGrid.add(bAdd);
+        buttonGrid.add(bUpdate);
+        buttonGrid.add(bDelete);
+        buttonGrid.add(bView);
+
+        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        gbc.insets = new Insets(20, 5, 5, 5);
+        leftPanel.add(buttonGrid, gbc);
+
+        mainContent.add(leftPanel, BorderLayout.WEST);
+
+        // 3. Table Section (Right Side)
+        String[] columns = {"ID", "Name", "Age", "Course"};
+        tableModel = new DefaultTableModel(columns, 0);
+        studentTable = new JTable(tableModel);
+        studentTable.setRowHeight(30);
+        studentTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
+        studentTable.setSelectionBackground(new Color(235, 245, 255));
         
-        buttonPanel.add(bAdd);
-        buttonPanel.add(bUpdate);
-        buttonPanel.add(bDelete);
-        buttonPanel.add(bView);
+        JScrollPane tableScroll = new JScrollPane(studentTable);
+        tableScroll.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        mainContent.add(tableScroll, BorderLayout.CENTER);
 
-        topPanel.add(buttonPanel, BorderLayout.CENTER);
-        
-        add(topPanel, BorderLayout.NORTH); // Add the combined input/button panel to the top
+        add(mainContent, BorderLayout.CENTER);
 
-        // ----------------- OUTPUT AREA (Center Section) -----------------
-        output = new JTextArea(10, 50);
-        output.setEditable(false);
-        output.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        output.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add padding
-        scrollPane = new JScrollPane(output); // Make output scrollable
-
-        add(scrollPane, BorderLayout.CENTER);
-
-        // ----------------- Listeners -----------------
+        // --- Event Listeners ---
         bAdd.addActionListener(this);
         bUpdate.addActionListener(this);
         bDelete.addActionListener(this);
         bView.addActionListener(this);
-        
-        // Final setup
-        setLocationRelativeTo(null); // Center the window on the screen
+
+        setLocationRelativeTo(null);
         setVisible(true);
+        refreshTable(); // Load data on startup
+    }
+
+    private void addFormRow(JPanel panel, String labelText, JTextField textField, GridBagConstraints gbc, int row) {
+        gbc.gridy = row;
+        gbc.gridx = 0; gbc.gridwidth = 1;
+        JLabel lbl = new JLabel(labelText);
+        lbl.setFont(new Font("SansSerif", Font.BOLD, 12));
+        panel.add(lbl, gbc);
+        
+        gbc.gridx = 1;
+        textField.setPreferredSize(new Dimension(150, 30));
+        panel.add(textField, gbc);
+    }
+
+    private JButton createStyledButton(String text, Color color) {
+        JButton btn = new JButton(text);
+        btn.setBackground(color);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setFont(new Font("SansSerif", Font.BOLD, 12));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return btn;
+    }
+
+    private void refreshTable() {
+        tableModel.setRowCount(0);
+        ArrayList<Student> list = StudentDAO.getAllStudents();
+        for (Student s : list) {
+            tableModel.addRow(new Object[]{s.getId(), s.getName(), s.getAge(), s.getCourse()});
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == bAdd) {
-            Student s = new Student(
-            Integer.parseInt(tId.getText()),
-            tName.getText(),
-            Integer.parseInt(tAge.getText()),
-            tCourse.getText()
-    );
-        StudentDAO.addStudent(s);
-         output.setText("Added Successfully!\n" + output.getText());
-         // Clear the ID field after successful addition
-         tId.setText(""); 
-} else if (e.getSource() == bUpdate) {
-                // Input validation for ID
-                if (tId.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter an ID to update.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                Student s = new Student(
-                    Integer.parseInt(tId.getText()),
-                    tName.getText(),
-                    Integer.parseInt(tAge.getText()),
-                    tCourse.getText()
-                );
+                Student s = new Student(Integer.parseInt(tId.getText()), tName.getText(), Integer.parseInt(tAge.getText()), tCourse.getText());
+                StudentDAO.addStudent(s);
+                refreshTable();
+            } else if (e.getSource() == bUpdate) {
+                Student s = new Student(Integer.parseInt(tId.getText()), tName.getText(), Integer.parseInt(tAge.getText()), tCourse.getText());
                 StudentDAO.updateStudent(s);
-                output.setText("Updated Successfully!\n" + output.getText());
-
+                refreshTable();
             } else if (e.getSource() == bDelete) {
-                 // Input validation for ID
-                if (tId.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter an ID to delete.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                int id = Integer.parseInt(tId.getText());
-                StudentDAO.deleteStudent(id);
-                output.setText("Deleted Successfully!\n" + output.getText());
-
+                StudentDAO.deleteStudent(Integer.parseInt(tId.getText()));
+                refreshTable();
             } else if (e.getSource() == bView) {
-                ArrayList<Student> list = StudentDAO.getAllStudents();
-                StringBuilder sb = new StringBuilder("ID | Name            | Age | Course\n" + "--------------------------------------------------------\n");
-                for (Student st : list) {
-                    // Use String.format for clean, column-aligned output
-                    sb.append(String.format("%-2s | %-15s | %-3s | %s%n", st.getId(), st.getName(), st.getAge(), st.getCourse()));
-                }
-                output.setText(sb.toString());
+                refreshTable();
             }
-
-        } catch (NumberFormatException nfe) {
-            // Catching all number format errors and showing a friendly dialog
-            JOptionPane.showMessageDialog(this, "Please enter valid numbers for ID and Age.", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            // Catching database errors
-            JOptionPane.showMessageDialog(this, "A database error occurred: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "System Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
